@@ -1,0 +1,175 @@
+{
+  "project_context": {
+    "business_name": "Baba PG House",
+    "goal": "Build a premium, startup-like website that attracts students and convinces them to contact/book instantly.",
+    "target_audience": "College students (18-24 years) looking for PG accommodation near Galgotias University and NIU University.",
+    "app_type": "marketing_site",
+    "constraints": "React frontend, FastAPI backend (Resend for emails), Mobile-first, fast loading."
+  },
+  "theme_and_archetype": {
+    "primary_theme": "light",
+    "toggle_supported": true,
+    "archetype": "Archetype 3 (Pastel & Soft) mixed with Archetype 4 (Swiss & High-Contrast)",
+    "reasoning": "A premium student housing brand needs to feel modern, safe, and highly approachable to Gen Z. Using a clean startup-like aesthetic (high-contrast text, clear structural grids) combined with soft, rounded elements (Gen Z approachability) establishes immediate trust and desire."
+  },
+  "colors": {
+    "light_mode": {
+      "background": "#FAFAFA",
+      "surface": "#FFFFFF",
+      "foreground": "#0A0A0A",
+      "primary": "#2563EB",
+      "primary_hover": "#1D4ED8",
+      "primary_foreground": "#FFFFFF",
+      "secondary": "#10B981",
+      "secondary_foreground": "#FFFFFF",
+      "muted": "#F4F4F5",
+      "muted_foreground": "#71717A",
+      "border": "#E4E4E7"
+    },
+    "dark_mode": {
+      "background": "#09090B",
+      "surface": "#18181B",
+      "foreground": "#FAFAFA",
+      "primary": "#3B82F6",
+      "primary_hover": "#60A5FA",
+      "primary_foreground": "#FFFFFF",
+      "secondary": "#34D399",
+      "secondary_foreground": "#09090B",
+      "muted": "#27272A",
+      "muted_foreground": "#A1A1AA",
+      "border": "#27272A"
+    }
+  },
+  "typography": {
+    "fonts": {
+      "headings": "Outfit, sans-serif",
+      "body": "Plus Jakarta Sans, sans-serif"
+    },
+    "rules": {
+      "h1": "text-4xl sm:text-5xl lg:text-6xl font-black tracking-tighter text-balance",
+      "h2": "text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-balance",
+      "h3": "text-2xl sm:text-3xl font-semibold tracking-tight",
+      "body": "text-base md:text-lg leading-relaxed text-muted-foreground",
+      "labels": "text-xs font-bold uppercase tracking-[0.2em]"
+    }
+  },
+  "spacing_and_layout": {
+    "philosophy": "Generous Spacing (p-8 to p-16) for sections. Bento grid layout for features to avoid traditional boring rows.",
+    "section_padding": "py-20 md:py-32",
+    "container": "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+    "border_radius": "Rounded elements everywhere to match Gen Z aesthetic. Cards use rounded-3xl, Buttons rounded-full."
+  },
+  "components": {
+    "navbar": "Sticky, top-0, z-50. Glassmorphism effect: backdrop-blur-xl bg-white/70 (dark: bg-neutral-900/70) with a subtle bottom border border-border/40. Links visible on desktop, hamburger on mobile.",
+    "buttons": {
+      "primary": "bg-primary text-primary-foreground hover:bg-primary_hover rounded-full px-8 py-6 text-lg font-semibold shadow-[0_8px_30px_rgba(37,99,235,0.24)] transition-all hover:-translate-y-1",
+      "secondary": "bg-secondary text-secondary-foreground hover:bg-[#059669] rounded-full px-8 py-6 text-lg font-semibold shadow-lg transition-all hover:-translate-y-1",
+      "outline": "border-2 border-border hover:border-foreground rounded-full px-8 py-6 text-lg font-semibold transition-all hover:-translate-y-1"
+    },
+    "cards": "Neumorphic/Soft UI approach. bg-surface, rounded-3xl, shadow-[0_8px_30px_rgba(0,0,0,0.04)] (light mode) or border border-border (dark mode). generous internal padding p-8.",
+    "whatsapp_float": "Fixed bottom-6 right-6 z-50 bg-[#25D366] text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-transform flex items-center justify-center cursor-pointer."
+  },
+  "animations": {
+    "scroll": "Use framer-motion for subtle fade-in-up (initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}) on scroll.",
+    "hover": "Cards lift slightly (-translate-y-2) and increase shadow on hover.",
+    "marquee": "Use react-fast-marquee for a subtle 'Editorial Ribbon' of key highlights (e.g., '24/7 Power • High-Speed WiFi • Premium Food') passing smoothly."
+  },
+  "icons": {
+    "library": "lucide-react",
+    "style": "Stroke width 2, matched to typography size."
+  },
+  "image_urls": [
+    {
+      "category": "hero_background",
+      "url": "https://static.prod-images.emergentagent.com/jobs/72061c2e-4561-4e14-b4bf-392ca1be0314/images/91d44c549b5325887a21f296b3d1614733884db5e8d26597d4b3e9e017a57df2.png",
+      "description": "Abstract geometric background with soft blue and green gradients to be used as hero background section."
+    },
+    {
+      "category": "hero_3d_asset",
+      "url": "https://static.prod-images.emergentagent.com/jobs/72061c2e-4561-4e14-b4bf-392ca1be0314/images/d90e5aadc9184355b135e17b8b536c301b826fd5e89666b16b9b47a553107320.png",
+      "description": "High-end 3D isometric render of a modern student room for hero section bento grid."
+    },
+    {
+      "category": "food_mess",
+      "url": "https://static.prod-images.emergentagent.com/jobs/72061c2e-4561-4e14-b4bf-392ca1be0314/images/5894b67c721bfa296bf88af88ce50bb59e4b81867429b2c5c9af87e1c3f1217c.png",
+      "description": "Premium thali food photography for the Mess/Food section."
+    },
+    {
+      "category": "gallery_room_1",
+      "url": "https://images.unsplash.com/photo-1774161321754-439bd8613f56?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1ODh8MHwxfHNlYXJjaHwyfHxtb2Rlcm4lMjBiZWRyb29tJTIwZGVza3xlbnwwfHx8fDE3NzY0NDM2ODR8MA&ixlib=rb-4.1.0&q=85",
+      "description": "Modern bedroom with desk - Gallery / Room Cards."
+    },
+    {
+      "category": "gallery_room_2",
+      "url": "https://images.unsplash.com/photo-1776348065117-02285a905b0b?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1ODh8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBiZWRyb29tJTIwZGVza3xlbnwwfHx8fDE3NzY0NDM2ODR8MA&ixlib=rb-4.1.0&q=85",
+      "description": "Modern bedroom with a desk setup."
+    },
+    {
+      "category": "testimonial_students",
+      "url": "https://images.unsplash.com/photo-1549057446-9f5c6ac91a04?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzR8MHwxfHNlYXJjaHwzfHxjb2xsZWdlJTIwc3R1ZGVudHMlMjBsYXVnaGluZ3xlbnwwfHx8fDE3NzY0NDM2ODV8MA&ixlib=rb-4.1.0&q=85",
+      "description": "Students hanging out and laughing - About Us or Community section."
+    }
+  ],
+  "sections_and_functionalities": [
+    {
+      "name": "Navigation",
+      "spec": "Sticky top bar. Logo on left. Anchor links: Rooms, Amenities, Food, Gallery, FAQs. Right side: Theme toggle and 'Book a Visit' primary button."
+    },
+    {
+      "name": "Hero Section",
+      "spec": "Asymmetric Bento grid. Left side: H1 'Premium Student Living, Redefined.', Subtext: 'Baba PG House — 200m from Galgotias & NIU University.', Buttons: 'Book a Visit' (Primary), 'Call Now' (Outline). Right side: Large 3D room asset image floating in a rounded-3xl container."
+    },
+    {
+      "name": "Key Highlights Marquee",
+      "spec": "react-fast-marquee containing: '200m to Galgotias ⚡️ High-Speed WiFi ⚡️ 4-Time Premium Meals ⚡️ 24/7 Security & Power ⚡️'. Background muted."
+    },
+    {
+      "name": "About Section",
+      "spec": "Image-text alternating layout. Text explaining the safe, community-driven nature of Baba PG House. Use the 'testimonial_students' image."
+    },
+    {
+      "name": "Room Types",
+      "spec": "Grid of 3 cards (Single, Double, Triple). Each card: Image of room at top, Title, Pricing (Monthly), list of included amenities, and a 'Select Room' button. Add popular badge to 'Double'."
+    },
+    {
+      "name": "Facilities / Amenities",
+      "spec": "Tetris Bento grid (MODE A) with 6-8 items. Use lucide icons. Eg: WiFI, Laundry, AC, Security, Power Backup, Housekeeping."
+    },
+    {
+      "name": "Food & Mess",
+      "spec": "Highlight the '4-time meals'. Use the 'food_mess' image as a stunning visual feature. Overlay a menu sample for the week."
+    },
+    {
+      "name": "Gallery & Video Placeholder",
+      "spec": "Masonry grid of images showing life at PG. Include one large block acting as a 'Video Tour' placeholder (with a play button overlay)."
+    },
+    {
+      "name": "Location",
+      "spec": "Google Maps iframe embed. Address block text with contact info (7290008205, 7290008206)."
+    },
+    {
+      "name": "Testimonials",
+      "spec": "3 column grid of student reviews praising the proximity to NIU/Galgotias and the food quality."
+    },
+    {
+      "name": "FAQ",
+      "spec": "Shadcn Accordion component for common questions (Curfew, Deposit, Guest policy)."
+    },
+    {
+      "name": "Contact / Booking Form",
+      "spec": "Clean card using Shadcn Input, Select, Textarea. Fields: Name, Email, Phone, Room Type, Message. Connects to FastAPI -> Resend. Must have data-testid attributes."
+    },
+    {
+      "name": "Footer",
+      "spec": "Large py-24 footer. Big brand text 'BABA PG HOUSE'. Links. Copyright."
+    }
+  ],
+  "instructions_to_main_agent": {
+    "tech_stack": "React (Vite/Next), TailwindCSS, Shadcn UI, Framer Motion, Lucide Icons. FastAPI backend.",
+    "fonts": "Import 'Outfit' and 'Plus Jakarta Sans' from Google Fonts in index.css.",
+    "testing": "CRITICAL: All interactive elements (buttons, nav links, form inputs) MUST have kebab-case data-testid attributes (e.g., data-testid='book-visit-button').",
+    "theme": "Use a robust ThemeProvider for light/dark mode. Ensure all custom colors use CSS variables to support the toggle seamlessly.",
+    "backend_integration": "Set up a FastAPI route (e.g., /api/contact) that takes the booking form data and triggers an email via Resend API. The frontend must hit this API.",
+    "components_to_install": "accordion, button, card, input, textarea, select, form (if using react-hook-form), toast (for form success)."
+  }
+}
