@@ -1,12 +1,14 @@
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter, HTTPException
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
+import asyncio
+import resend
 from pathlib import Path
-from pydantic import BaseModel, Field, ConfigDict
-from typing import List
+from pydantic import BaseModel
+from typing import Optional
 import uuid
 from datetime import datetime, timezone
 
@@ -14,59 +16,99 @@ from datetime import datetime, timezone
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
-# MongoDB connection
 mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
 
-# Create the main app without a prefix
 app = FastAPI()
-
-# Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
 
+resend.api_key = os.environ.get('RESEND_API_KEY', '')
 
-# Define Models
-class StatusCheck(BaseModel):
-    model_config = ConfigDict(extra="ignore")  # Ignore MongoDB's _id field
-    
-    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    client_name: str
-    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
-class StatusCheckCreate(BaseModel):
-    client_name: str
 
-# Add your routes to the router instead of directly to app
+class ContactForm(BaseModel):
+    name: str
+    phone: str
+    room_type: str
+    message: Optional[str] = ""
+
+
 @api_router.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {"message": "Baba PG House API"}
 
-@api_router.post("/status", response_model=StatusCheck)
-async def create_status_check(input: StatusCheckCreate):
-    status_dict = input.model_dump()
-    status_obj = StatusCheck(**status_dict)
-    
-    # Convert to dict and serialize datetime to ISO string for MongoDB
-    doc = status_obj.model_dump()
-    doc['timestamp'] = doc['timestamp'].isoformat()
-    
-    _ = await db.status_checks.insert_one(doc)
-    return status_obj
 
-@api_router.get("/status", response_model=List[StatusCheck])
-async def get_status_checks():
-    # Exclude MongoDB's _id field from the query results
-    status_checks = await db.status_checks.find({}, {"_id": 0}).to_list(1000)
-    
-    # Convert ISO string timestamps back to datetime objects
-    for check in status_checks:
-        if isinstance(check['timestamp'], str):
-            check['timestamp'] = datetime.fromisoformat(check['timestamp'])
-    
-    return status_checks
+@api_router.post("/contact")
+async def submit_contact(data: ContactForm):
+    doc = {
+        "id": str(uuid.uuid4()),
+        "name": data.name,
+        "phone": data.phone,
+        "room_type": data.room_type,
+        "message": data.message,
+        "timestamp": datetime.now(timezone.utc).isoformat()
+    }
+    await db.enquiries.insert_one(doc)
 
-# Include the router in the main app
+    sender_email = os.environ.get('SENDER_EMAIL', 'onboarding@resend.dev')
+    recipient = os.environ.get('NOTIFICATION_EMAIL', 'babapg001@gmail.com')
+
+    html_content = f"""
+    <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;">
+      <div style="background:#2563EB;color:white;padding:24px;border-radius:12px 12px 0 0;">
+        <h1 style="margin:0;font-size:22px;">New Room Enquiry</h1>
+        <p style="margin:6px 0 0;opacity:0.9;font-size:14px;">Baba PG House — Greater Noida</p>
+      </div>
+      <div style="background:#f9f9f9;padding:24px;border-radius:0 0 12px 12px;border:1px solid #e5e5e5;border-top:none;">
+        <table style="width:100%;border-collapse:collapse;">
+          <tr style="border-bottom:1px solid #e5e5e5;">
+            <td style="padding:12px 0;font-weight:bold;color:#555;width:35%;">Name</td>
+            <td style="padding:12px 0;color:#111;">{data.name}</td>
+          </tr>
+          <tr style="border-bottom:1px solid #e5e5e5;">
+            <td style="padding:12px 0;font-weight:bold;color:#555;">Phone</td>
+            <td style="padding:12px 0;color:#111;">{data.phone}</td>
+          </tr>
+          <tr style="border-bottom:1px solid #e5e5e5;">
+            <td style="padding:12px 0;font-weight:bold;color:#555;">Room Type</td>
+            <td style="padding:12px 0;color:#111;">{data.room_type}</td>
+          </tr>
+          <tr>
+            <td style="padding:12px 0;font-weight:bold;color:#555;vertical-align:top;">Message</td>
+            <td style="padding:12px 0;color:#111;">{data.message or 'No message provided'}</td>
+          </tr>
+        </table>
+        <div style="margin-top:20px;padding:15px;background:#EFF6FF;border-radius:8px;border-left:4px solid #2563EB;">
+          <p style="margin:0;color:#1D4ED8;font-size:14px;">
+            <strong>Action Required:</strong> Call back {data.name} at <strong>{data.phone}</strong> to schedule a visit.
+          </p>
+        </div>
+      </div>
+      <p style="text-align:center;color:#999;font-size:12px;margin-top:16px;">
+        Baba PG House · Near Galgotias & NIU University, Greater Noida
+      </p>
+    </div>
+    """
+
+    params = {
+        "from": f"Baba PG House <{sender_email}>",
+        "to": [recipient],
+        "subject": f"New Enquiry: {data.room_type} — {data.name} ({data.phone})",
+        "html": html_content
+    }
+
+    try:
+        email = await asyncio.to_thread(resend.Emails.send, params)
+        logger.info(f"Email sent: {email}")
+    except Exception as e:
+        logger.error(f"Email send failed: {str(e)}")
+
+    return {"status": "success", "message": "Your enquiry has been submitted successfully!"}
+
+
 app.include_router(api_router)
 
 app.add_middleware(
@@ -77,12 +119,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
